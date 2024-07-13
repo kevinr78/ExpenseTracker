@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mysql from "mysql2/promise";
-import { json } from "react-router-dom";
+
 import bcrypt from "bcryptjs";
 import { createJWT, verifyJWT } from "./utils/JWT.js";
 import "dotenv/config";
@@ -22,7 +22,7 @@ app.use((err, req, res, next) => {
   return res.status(err.status || 500).send({
     message: err.message || "Something went wrong",
     status: err.status || 500,
-    ok: err.ok || 0,
+    ok: err.ok || false,
   });
 });
 

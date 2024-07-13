@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mysql from "mysql2/promise";
-import { json } from "react-router-dom";
+
 import bcrypt from "bcryptjs";
 import { createJWT, verifyJWT } from "../utils/JWT.js";
 import conn from "../utils/DB.js";
