@@ -6,16 +6,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <link rel="stylesheet" href="./index.css">
+    <script type="module" src="./features/Registration/register.js" defer></script>
     <title>Registration</title>
   </head>
   <body class="h-screen flex justify-center items-center ">
     <section class="flex flex-col gap-10 w-full max-w-xl">
-        <h1 class="text-4xl font-bold">Login</h1>
-        <div class="flex flex-col gap-3 w-full ">
-            <input type="text" placeholder="Email" class="input input-bordered w-full " />
-            <input type="text" placeholder="Password" class="input input-bordered w-full " />
+      
+        <div class=" gap-3 w-full ">
+          <div class="flex flex-col" id="login_form_container">
+            <h1 class="text-4xl font-bold mb-4">Login</h1>
+            <form id="login_form">
+              <input type="hidden" name="login" />
+              <input type="text" placeholder="Email" class="input input-bordered w-full mb-4" name="email"/>
+              <input type="password" placeholder="Password" class="input input-bordered w-full " name="password"/>
+              <div class=" flex justify-between items-center">
+                <button type="submit"  class="btn btn-primary mt-3 mr-auto ">Login</button>
+                <button type="button"  class="hover:underline" id="signin_link"> New Here? Register Here?</button>
+              </div>
+             
+            </form>
+           
+          </div>
+        
+        <div class="hidden flex flex-col"  id="signin_form_container" >
+          <h1 class="text-4xl font-bold mb-4">Sign Up</h1>
+          <form id="signin_form" >
+            <input type="hidden" name="signin" />
+            <input type="text" placeholder="User name" class="input input-bordered w-full mb-4" name="name"/>
+            <input type="text" placeholder="Email" class="input input-bordered w-full mb-4" name="email"/>
+            <input type="password" placeholder="Password" class="input input-bordered w-full " name="password"/>
+            <div class=" flex justify-between">
+              <button type="submit"  class="btn btn-primary mt-3 mr-auto ">Register</button>
+              <button type="button" class="hover:underline" id="login_link">Already a user?Login Here?</button>
+            </div>
+          
+          </form>
         </div>
-        <button class="btn btn-primary">Submit</button>
+         
+        </div>
+        
     </section>
+    <script type="module" src="./src/index.js"></script>
   </body>
 </html>

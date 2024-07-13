@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "server": "cd server;nodemon --inspect index.js ",
+    "client": "cd app & npm run dev"
+  },
   "devDependencies": {
     "daisyui": "^4.12.10"
   }

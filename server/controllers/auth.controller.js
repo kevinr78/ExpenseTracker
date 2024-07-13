@@ -27,7 +27,7 @@ const loginUser = async function (req, res, next) {
     res.status(200).json({
       token: token,
       ok: true,
-      message: "User created successfully",
+      message: "Logged In Successfully",
       user: result[0],
     });
   } catch (err) {
@@ -60,7 +60,7 @@ const signInUser = async function (req, res, next) {
     [results, feilds] = await conn.query(query, [name, email, hashedPass]);
 
     console.log(results);
-    const token = createJWT(uid);
+    const token = createJWT(results.insertId);
 
     res.status(200).json({
       token: token,
