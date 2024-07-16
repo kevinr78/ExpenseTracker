@@ -15,7 +15,7 @@
         <div class=" gap-3 w-full ">
           <div class="flex flex-col" id="login_form_container">
             <h1 class="text-4xl font-bold mb-4">Login</h1>
-            <form id="login_form">
+            <form id="login_form" method="post" action="./pages/home.html">
               <input type="hidden" name="login" />
               <input type="text" placeholder="Email" class="input input-bordered w-full mb-4" name="email"/>
               <input type="password" placeholder="Password" class="input input-bordered w-full " name="password"/>
@@ -30,7 +30,7 @@
         
         <div class="hidden flex flex-col"  id="signin_form_container" >
           <h1 class="text-4xl font-bold mb-4">Sign Up</h1>
-          <form id="signin_form" >
+          <form id="signin_form" method="post" >
             <input type="hidden" name="signin" />
             <input type="text" placeholder="User name" class="input input-bordered w-full mb-4" name="name"/>
             <input type="text" placeholder="Email" class="input input-bordered w-full mb-4" name="email"/>
@@ -46,6 +46,6 @@
         </div>
         
     </section>
-    <script type="module" src="./src/index.js"></script>
+    <script type="module" src="./features/Registration/register.js"></script>
   </body>
 </html>

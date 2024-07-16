@@ -16,7 +16,7 @@ export const verifyJWT = function (req, res, next) {
       req.currentuser = verifiedtoken;
     }
 
-    console.log(req.currentuser);
+
     next();
   } catch (error) {
     next(error);

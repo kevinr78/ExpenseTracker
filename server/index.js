@@ -12,9 +12,9 @@ import "./utils/DB.js";
 const app = express();
 debugger;
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
 app.use("/", AuthRouter);
 app.use("/", TransactionRouter);
 
