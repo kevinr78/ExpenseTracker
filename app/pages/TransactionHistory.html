@@ -9,6 +9,37 @@
 <body>
     <div>
         <h1 class="text-4xl font-bold mb-4">Transaction History</h1>
+        <div>
+          <h3 class="text-2xl font-bold mb-4"></h3>
+          <div  class="collapse collapse-arrow border-base-300 bg-base-200 border">
+            <input type="checkbox" />
+            <div class="collapse-title text-xl font-medium">Filter Transaction</div>
+            <div class="collapse-content w-full">
+              <div class="fliter_transaction_container p-3 w-full">
+               <form action="" id="filter_transaction_form">
+                <input type="date" name="startDate" id="startDate" placeholder="From Date" class="input input-bordered w-1/4 max-w-xs" />
+                <input type="date" id="endDate" name="endDate" placeholder="To Date" class="input input-bordered w-1/4 " />
+                <select class="select select-bordered w-1/4 " id="category" name="category">
+                  <option disabled selected>Category</option>
+                  <option>Han Solo</option>
+                  <option>Greedo</option>
+                </select>
+                <select class="select select-bordered w-1/4 " id="type" name="type">
+                  <option disabled selected>Type</option>
+                  <option>Income</option>
+                  <option>Expense</option>
+                </select>
+               </form>
+               
+                  <button id="filter_transactions" class="btn btn-primary">Filter</button>
+                  <button id="clear_transactions" class="btn btn-primary">Clear</button>
+               
+               
+              </div>
+            </div>
+          </div>
+          
+        </div>
         <div class="overflow-x-auto">
           <table class="table">
             <!-- head -->

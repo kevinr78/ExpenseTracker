@@ -42,43 +42,38 @@ const getAllTransactions = async function (req, res, next) {
 };
 
 const filterTransaction = async function (req, res, next) {
-  const { category, type, startDate, endDate } = req.body;
+  let { category=null, type=null, startDate=null, endDate=null } = req.body;
   let query;
   let isFirstQuery = true;
-  let filterQuery = "SELECT * FROM TRANSACTIONS ";
-
+  
+  let filterQuery = `SELECT * FROM TRANSACTIONS WHERE BY_USER=${req.currentuser.uid}`;
+  
   if (category !== null && category !== "Category") {
-    if (isFirstQuery) {
-      filterQuery += `WHERE LOWER(category)=LOWER('${category
-        .slice(2)
-        .trim()}')`;
-      isFirstQuery = false;
-    } else {
       filterQuery += ` AND LOWER(category)=LOWER('${category
         .slice(2)
         .trim()}')`;
-    }
   }
-
+  
   if (type !== null) {
-    if (isFirstQuery) {
-      filterQuery += `WHERE LOWER(type)=LOWER('${type}')`;
-      isFirstQuery = false;
-    } else {
       filterQuery += ` AND LOWER(type)=LOWER('${type}')`;
-    }
   }
-
-  if (startDate !== null && endDate !== null) {
-    if (isFirstQuery) {
-      filterQuery += `WHERE date BETWEEN '${startDate}' AND '${endDate}'`;
-      isFirstQuery = false;
-    } else {
+  //If any one is null 
+  if (startDate === null || endDate == null ) {
+    if(startDate!==null){
+      //append only start date
+        filterQuery += ` and date >= '${startDate}'`;
+      
+    }else{    
+      //append only end date
+        filterQuery += ` and date <= '${endDate}'`;
+      }
+  
+  }else{
+      //between both date
       filterQuery += ` and date BETWEEN '${startDate}' AND '${endDate}'`;
-    }
-
-    filterQuery += ` AND BY_USER=${req.currentuser.uid};`;
   }
+  
+ 
   try {
     let [results, fields] = await conn.query(filterQuery, [
       category,
