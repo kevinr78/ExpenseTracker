@@ -11,16 +11,20 @@ class APIRequest{
 
      async sendRequest(){
         const token = localStorage.getItem('token')|| null
+        const payload ={}
+        
 
         if(token){
             this.headers["Authorization"]  = "Bearer "  + token
         }
+
+        payload.method=this.method
+        payload.headers=this.headers
+        if(this.body!==null){
+            payload.body=this.body
+        }
         
-        let result = await fetch(`http://localhost:3000/${this.endpoint}`,{
-            method:this.method,
-            body:this.body,
-            headers:this.headers
-        })
+        let result = await fetch(`http://localhost:3000/${this.endpoint}`,payload)
 
         return await result.json();
     }
