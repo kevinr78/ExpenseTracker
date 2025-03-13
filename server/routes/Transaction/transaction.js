@@ -3,11 +3,15 @@ import {
   getAllTransactions,
   deleteTransaction,
   addNewTransaction,
+  updateTransaction,
 } from "../../controller/Transaction/transaction.js";
+
+import { checkForUser } from "../../middleware/checkIfUserExist.js";
 const transactionRouter = Router();
 
-transactionRouter.get("/allTransactions", getAllTransactions);
-transactionRouter.post("/newTransaction", addNewTransaction);
-transactionRouter.delete("/removeTransaction", deleteTransaction);
+transactionRouter.post("/allTransactions", checkForUser, getAllTransactions);
+transactionRouter.post("/newTransaction", checkForUser, addNewTransaction);
+transactionRouter.delete("/removeTransaction", checkForUser, deleteTransaction);
+transactionRouter.post("/updateTransaction", checkForUser, updateTransaction);
 
 export default transactionRouter;

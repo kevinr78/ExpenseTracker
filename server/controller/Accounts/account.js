@@ -4,18 +4,10 @@ const getAllAccounts = async (req, res, next) => {
   const { user_id } = req.body;
   let cursor;
   try {
-    if (!user_id) {
-      return res.status(400).json({ error: "User ID required." });
-    }
-
-    cursor = await query("SELECT * from users where user_id=$1", [user_id]);
-    if (cursor.length === 0) {
-      return res.status(400).json({ error: "User Not found." });
-    }
-
-    cursor = await query("SELECT * FROM accounts WHERE account_user_id=$1", [
-      user_id,
-    ]);
+    cursor = await query(
+      "SELECT * FROM accounts WHERE account_user_id=$1 ORDER BY account_id",
+      [req.user.user_id]
+    );
     if (cursor.length === 0) {
       return res.status(404).json({ error: "No accounts found." });
     }
@@ -29,7 +21,6 @@ const getAllAccounts = async (req, res, next) => {
 
 const createNewAccount = async (req, res, next) => {
   const {
-    user_id,
     account_name,
     account_type,
     account_starting_balance,
@@ -37,18 +28,9 @@ const createNewAccount = async (req, res, next) => {
   } = req.body;
   let cursor;
   try {
-    if (!user_id) {
-      return res.status(400).json({ error: "User ID required." });
-    }
-
-    cursor = await query("SELECT * from users where user_id=$1", [user_id]);
-    if (cursor.length === 0) {
-      return res.status(400).json({ error: "User Not found." });
-    }
-
     cursor = await query(
       "SELECT COUNT(*) AS num_of_accounts from accounts where account_user_id=$1 AND account_name=$2 AND account_type=$3",
-      [user_id, account_name, account_type]
+      [req.user.user_id, account_name, account_type]
     );
     if (cursor[0].num_of_accounts != 0) {
       return res.status(400).json({ error: "Account already exists" });
@@ -61,7 +43,7 @@ const createNewAccount = async (req, res, next) => {
         account_type,
         account_starting_balance,
         account_status,
-        user_id,
+        req.user.user_id,
       ]
     );
 
@@ -76,15 +58,6 @@ const deleteAccount = async (req, res) => {
   const { user_id, account_id } = req.body;
   let cursor;
   try {
-    if (!user_id) {
-      return res.status(400).json({ error: "User ID required." });
-    }
-
-    cursor = await query("SELECT * from users where user_id=$1", [user_id]);
-    if (cursor.length === 0) {
-      return res.status(400).json({ error: "User Not found." });
-    }
-
     cursor = await query("SELECT * FROM accounts where account_id=$1", [
       account_id,
     ]);
@@ -95,7 +68,7 @@ const deleteAccount = async (req, res) => {
 
     cursor = await query(
       "DELETE FROM accounts where account_id=$1 AND account_user_id=$2",
-      [account_id, user_id]
+      [account_id, req.user.user_id]
     );
 
     res.status(200).json({ data: cursor }); // Return updated user
@@ -106,10 +79,10 @@ const deleteAccount = async (req, res) => {
 };
 const updateAccount = async (req, res) => {
   try {
-    const { user_id, account_id, fieldsToBeUpdated } = req.body;
+    const { account_id, fieldsToBeUpdated } = req.body;
 
     if (
-      !user_id ||
+      !req.user.user_id ||
       !fieldsToBeUpdated ||
       Object.keys(fieldsToBeUpdated).length === 0
     ) {
@@ -125,7 +98,7 @@ const updateAccount = async (req, res) => {
 
     // Create values array for parameterized query
     const values = Object.values(fieldsToBeUpdated);
-    values.push(user_id); // Add userId as the last parameter
+    values.push(req.user.user_id); // Add userId as the last parameter
     values.push(account_id);
 
     // SQL query
