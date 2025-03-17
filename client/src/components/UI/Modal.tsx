@@ -1,5 +1,5 @@
 import NewAccount from "./Account/NewAccount";
-import NewTransaction from "./NewTransaction";
+import NewTransaction from "./Transaction/NewTransaction";
 
 interface ModalProps {
   onClose?: () => void;

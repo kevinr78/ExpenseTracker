@@ -9,9 +9,9 @@ import {
 import { checkForUser } from "../../middleware/checkIfUserExist.js";
 const transactionRouter = Router();
 
-transactionRouter.post("/allTransactions", checkForUser, getAllTransactions);
-transactionRouter.post("/newTransaction", checkForUser, addNewTransaction);
-transactionRouter.delete("/removeTransaction", checkForUser, deleteTransaction);
-transactionRouter.post("/updateTransaction", checkForUser, updateTransaction);
+transactionRouter.get("/transaction", checkForUser, getAllTransactions);
+transactionRouter.post("/transaction", checkForUser, addNewTransaction);
+transactionRouter.delete("/transaction", checkForUser, deleteTransaction);
+transactionRouter.patch("/transaction", checkForUser, updateTransaction);
 
 export default transactionRouter;

@@ -53,6 +53,7 @@ export default function NewAccount() {
         <select
           defaultValue="Pick a color"
           className="select w-full"
+          onChange={handleChange}
           name="account_type"
         >
           <option disabled={true}>Pick Account Type</option>
@@ -64,6 +65,7 @@ export default function NewAccount() {
         <input
           type="number"
           className="input w-full"
+          onChange={handleChange}
           name="account_balance"
           placeholder="Starting Balance"
         />
@@ -72,6 +74,7 @@ export default function NewAccount() {
         <select
           defaultValue="Status"
           className="select w-full"
+          onChange={handleChange}
           name="account_status"
         >
           <option disabled={true}>Status</option>

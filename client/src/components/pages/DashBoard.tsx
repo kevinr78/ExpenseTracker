@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import AccountList from "../UI/Account/AccountList";
 import Stat from "../UI/Stat";
-import ItemNavbar from "../UI/Navbar/ItemNavbar";
 import Modal from "../UI/Modal";
+import Transaction from "../UI/Transaction/Transaction";
 
 export default function DashBoard() {
   const [modalContent, setModalContent] = useState<string>("");
@@ -46,75 +46,7 @@ export default function DashBoard() {
         </div>
       </section>
       <section id="chart-table">
-        <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-          <ItemNavbar type="Transactions" action={setModalContent} />
-          <table className="table ">
-            {/* head */}
-            <thead className="bg-base-300">
-              <tr>
-                <th></th>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Category</th>
-                <th>Card</th>
-
-                <th>Amount</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* row 1 */}
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox checkbox-sm" />
-                  </label>
-                </th>
-                <td>
-                  <div className="flex items-center gap-3">
-                    <div>
-                      <div className="font-bold">Hart Hagerty</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Zemlak, Daniel and Leannon
-                  <br />
-                </td>
-                <td>Purple</td>
-                <th>
-                  <button className="btn btn-ghost btn-xs">details</button>
-                </th>
-                <th>$100</th>
-              </tr>
-              {/* row 2 */}
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox checkbox-sm" />
-                  </label>
-                </th>
-                <td>
-                  <div className="flex items-center gap-3">
-                    <div>
-                      <div className="font-bold">Hart Hagerty</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Zemlak, Daniel and Leannon
-                  <br />
-                </td>
-                <td>Purple</td>
-                <th>
-                  <button className="btn btn-ghost btn-xs">details</button>
-                </th>
-                <th>$100</th>
-              </tr>
-            </tbody>
-            {/* foot */}
-          </table>
-        </div>
+        <Transaction modalAction={setModalContent} />
       </section>
     </main>
   );

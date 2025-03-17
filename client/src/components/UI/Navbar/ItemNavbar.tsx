@@ -3,8 +3,8 @@ import { NavBarProps } from "../../../types/types";
 export default function ItemNavbar({ type, action }: NavBarProps) {
   return (
     <>
-      <div className="navbar p-2 min-h-1">
-        <div className="navbar-start">{type}</div>
+      <div className="navbar  min-h-1">
+        <div className="navbar-start text-xl font-bold">{type}</div>
         <div className="navbar-end gap-2">
           <button className="btn">View All</button>
           <button

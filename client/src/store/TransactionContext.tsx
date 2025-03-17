@@ -1,11 +1,20 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+} from "react";
 
 // Define types
-interface Transaction {
-  id: number;
-  accountId: number;
-  amount: number;
-  type: "credit" | "debit";
+export interface Transaction {
+  transaction_id?: number;
+  transaction_account: number;
+  user_id?: number;
+  transaction_amount: number;
+  transaction_type: "credit" | "debit" | null;
+  transaction_category: string;
+  transaction_date: Date | string;
 }
 
 interface TransactionContextProps {
@@ -23,33 +32,56 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   // Fetch transactions
-  const fetchTransactions = async () => {
+  const fetchTransactions = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:3000/transactions/all", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: 1 }),
-      });
-      const data = await response.json();
-      setTransactions(data);
+      const request = await fetch(
+        `http://localhost:3000/transactions/transaction?user_id=1`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const response = await request.json();
+      setTransactions(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching transactions:", error);
     }
-  };
+  }, []);
 
   // Add transaction
-  const addTransaction = async (newTransaction: Transaction) => {
-    try {
-      await fetch("http://localhost:3000/transactions/new", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newTransaction),
-      });
-      fetchTransactions();
-    } catch (error) {
-      console.error("Error adding transaction:", error);
-    }
-  };
+  const addTransaction = useCallback(
+    async (newTransaction: Transaction) => {
+      try {
+        const request = await fetch(
+          "http://localhost:3000/transactions/transaction",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newTransaction),
+          }
+        );
+        const response = await request.json();
+
+        setTransactions((prevTrans) => {
+          if (prevTrans == null) {
+            return response.data[0];
+          }
+          return [...prevTrans, response.data[0]];
+        });
+
+        await fetchTransactions();
+      } catch (error) {
+        console.error("Error adding transactions:", error);
+      } finally {
+        let modal = document.getElementById(
+          "modal"
+        ) as HTMLDialogElement | null;
+        if (modal) modal.close();
+      }
+    },
+    [fetchTransactions]
+  );
 
   return (
     <TransactionContext.Provider

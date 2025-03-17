@@ -5,7 +5,7 @@ const getAllTransactions = async (req, res, next) => {
   let cursor;
   try {
     cursor = await query(
-      "SELECT * FROM transactions where transaction_user_id=$1",
+      "SELECT * FROM transactions where transaction_user_id=$1 LIMIT 5",
       [req.user.user_id]
     );
 
@@ -46,12 +46,25 @@ const updateTransaction = async (req, res) => {
 
 // Function to insert a new user
 const addNewTransaction = async (req, res, next) => {
-  const { trans_date, trans_amount, trans_acc, trans_category } = req.body;
+  const {
+    transaction_date,
+    transaction_amount,
+    transaction_account,
+    transaction_category,
+    transaction_type,
+  } = req.body;
 
   try {
     const cursor = await query(
-      "INSERT INTO transactions (transaction_date,transaction_amount,transaction_account, transaction_category,transaction_user_id) VALUES ($1, $2, $3,$4,$5) RETURNING *",
-      [trans_date, trans_amount, trans_acc, trans_category, req.user.user_id]
+      "INSERT INTO transactions (transaction_date,transaction_amount,transaction_account, transaction_category, transaction_type,transaction_user_id) VALUES ($1, $2, $3,$4,$5,$6) RETURNING *",
+      [
+        transaction_date,
+        transaction_amount,
+        transaction_account,
+        transaction_category,
+        transaction_type,
+        req.user.user_id,
+      ]
     );
 
     res.status(200).json({ data: cursor }); // Return updated user
