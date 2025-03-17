@@ -61,38 +61,41 @@ export default function NewTransaction() {
 
         <label className="fieldset-label">Account</label>
         <select
-          defaultValue="Pick a color"
           className="select w-full"
           name="transaction_account"
           onChange={handleChange}
         >
-          <option disabled={true}>Account</option>
+          <option disabled={true} selected>
+            Account
+          </option>
           <option value={20}>Acc 1</option>
           <option value={20}>Acc 2</option>
         </select>
         <label className="fieldset-label">Type</label>
         <select
-          defaultValue="Pick a color"
           className="select w-full"
           name="transaction_type"
           onChange={handleChange}
         >
-          <option disabled={true}>Type</option>
-          <option>Credit</option>
-          <option>Debit</option>
+          <option disabled={true} selected>
+            Type
+          </option>
+          <option value={"Credit"}>Credit</option>
+          <option value={"Debit"}>Debit</option>
         </select>
 
         <label className="fieldset-label">Category</label>
         <select
-          defaultValue="Pick a Category"
           name="transaction_category"
           className="select w-full"
           onChange={handleChange}
         >
-          <option disabled={true}>Category</option>
-          <option>Food</option>
-          <option>Rent</option>
-          <option>Miscellaneous</option>
+          <option disabled={true} selected={true}>
+            Category
+          </option>
+          <option value={"Food"}>Food</option>
+          <option value={"Rent"}>Rent</option>
+          <option value={"Miscellaneous"}>Miscellaneous</option>
         </select>
 
         <button className="btn btn-success mt-4" type="submit">

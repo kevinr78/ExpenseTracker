@@ -8,6 +8,7 @@ import transactionRouter from "./routes/Transaction/transaction.js";
 import userRouter from "./routes/User/user.js";
 
 import accRouter from "./routes/Accounts/account.js";
+import statsRouter from "./routes/stats.js";
 const app = express();
 
 app.use(logger("dev"));
@@ -18,6 +19,7 @@ app.use(cookieParser());
 app.use("/users", userRouter);
 app.use("/transactions", transactionRouter);
 app.use("/accounts", accRouter);
+app.use("/stats", statsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import AccountList from "../UI/Account/AccountList";
-import Stat from "../UI/Stat";
+
 import Modal from "../UI/Modal";
 import Transaction from "../UI/Transaction/Transaction";
+import Stats from "../UI/Stats/Stats";
 
 export default function DashBoard() {
   const [modalContent, setModalContent] = useState<string>("");
@@ -18,7 +19,7 @@ export default function DashBoard() {
           <AccountList modalAction={setModalContent} />
         </div>
         <div className=" w-full flex-2  flex flex-col gap-2">
-          <Stat />
+          <Stats />
           <div className="flex gap-x-2 border border-base-300 rounded-lg  ">
             <div className="card card-side bg-base-100 shadow-sm w-full ">
               <div className="card-body">
