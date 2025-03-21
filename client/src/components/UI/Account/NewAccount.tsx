@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Account, useAccountContext } from "../../../store/AccountContext";
+import { account_types } from "../../../utils/category";
+
 type NewAccount = {
   URL: string;
   payload: any;
@@ -57,16 +59,18 @@ export default function NewAccount() {
           name="account_type"
         >
           <option disabled={true}>Pick Account Type</option>
-          <option>Visa</option>
-          <option>Mastercard</option>
-          <option>Other</option>
+          {account_types.map((acc, idx) => (
+            <option key={idx} value={acc}>
+              {acc}
+            </option>
+          ))}
         </select>
         <label className="fieldset-label">Starting Balance</label>
         <input
           type="number"
           className="input w-full"
           onChange={handleChange}
-          name="account_balance"
+          name="account_starting_balance"
           placeholder="Starting Balance"
         />
 

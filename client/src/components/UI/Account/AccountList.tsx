@@ -12,7 +12,7 @@ export default function AccountList({ modalAction }: ModalProps) {
 
   return (
     <ul className="list ">
-      <li className="p-4 pb-2 text-xs  tracking-wide sticky top-0  bg-base-100">
+      <li className="p-4 pb-2 text-xs z-[4] tracking-wide sticky top-0  bg-base-200">
         <ItemNavbar type="Accounts" action={modalAction} />
       </li>
       {accounts && accounts.length > 0

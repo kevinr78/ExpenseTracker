@@ -18,31 +18,10 @@ export default function DashBoard() {
         >
           <AccountList modalAction={setModalContent} />
         </div>
-        <div className=" w-full flex-2  flex flex-col gap-2">
+        <div className=" w-full flex-2  flex flex-col gap-2 ">
           <Stats />
-          <div className="flex gap-x-2 border border-base-300 rounded-lg  ">
-            <div className="card card-side bg-base-100 shadow-sm w-full ">
-              <div className="card-body">
-                <h2 className="card-title">Summary</h2>
-                <p>Some Chart</p>
-              </div>
-              <div className="p-2">
-                <div
-                  className="radial-progress p-2"
-                  style={
-                    {
-                      "--value": "70",
-                      "--size": "10rem",
-                      "--thickness": "1rem",
-                    } as React.CSSProperties
-                  }
-                  aria-valuenow={70}
-                  role="progressbar"
-                >
-                  70%
-                </div>
-              </div>
-            </div>
+          <div className="flex flex-1 gap-x-2 border border-base-300 rounded-lg  overflow-auto ">
+            {/* <HomeChart /> */}
           </div>
         </div>
       </section>

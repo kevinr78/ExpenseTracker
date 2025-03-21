@@ -23,10 +23,10 @@ export default function Transaction({ modalAction }: ModalProps) {
             <th>Name</th>
             <th>Date</th>
             <th>Category</th>
-            <th>Card</th>
+            <th> From Account Num.</th>
             <th>Type</th>
             <th>Amount</th>
-            <th></th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -35,7 +35,8 @@ export default function Transaction({ modalAction }: ModalProps) {
               return (
                 <TransactionRow
                   key={trans.transaction_id}
-                  transaction_account={trans.transaction_account}
+                  transaction_title={trans.transaction_title}
+                  transaction_to_account={trans.transaction_to_account}
                   transaction_amount={trans.transaction_amount}
                   transaction_category={trans.transaction_category}
                   transaction_date={trans.transaction_date}

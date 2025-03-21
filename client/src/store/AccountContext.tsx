@@ -5,7 +5,7 @@ import {
   useState,
   ReactNode,
 } from "react";
-
+import { toast } from "react-toastify";
 // Define types
 
 export type Account = {
@@ -43,10 +43,14 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
         }
       );
       const data = await response.json();
-
+      if (!data.ok) {
+        toast(data.error);
+        return;
+      }
       setAccounts(data.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching accounts:", error);
+      toast(error.message);
     }
   }, []);
 
@@ -64,15 +68,20 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
         );
         const response = await request.json();
 
-        console.log("Account Added Successfully");
+        if (!response.ok) {
+          toast(response.error);
+          return;
+        }
+
         setAccounts((prevAcc) => {
           if (prevAcc == null) {
             return response.data;
           }
-          return [...prevAcc, response.data];
+          return [...prevAcc, response.data[0]];
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error adding account:", error);
+        toast(error.message);
       } finally {
         let modal = document.getElementById(
           "modal"

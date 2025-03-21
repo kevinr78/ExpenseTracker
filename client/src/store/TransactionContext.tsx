@@ -9,12 +9,15 @@ import {
 // Define types
 export interface Transaction {
   transaction_id?: number;
-  transaction_account: number;
+  transaction_title: string;
+  transaction_to_account: number;
+  transaction_from_account?: number | null;
   user_id?: number;
   transaction_amount: number;
   transaction_type: "credit" | "debit" | null;
   transaction_category: string;
   transaction_date: Date | string;
+  transaction_description?: string;
 }
 
 interface TransactionContextProps {

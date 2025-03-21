@@ -5,14 +5,16 @@ const getAllTransactions = async (req, res, next) => {
   let cursor;
   try {
     cursor = await query(
-      "SELECT * FROM transactions where transaction_user_id=$1 LIMIT 5",
+      "SELECT * FROM transactions where transaction_user_id=$1 ORDER BY transaction_date LIMIT 5 ",
       [req.user.user_id]
     );
 
-    res.status(200).json({ data: cursor }); // Return updated user
+    res.status(200).json({ ok: true, data: cursor }); // Return updated user
   } catch (error) {
     console.error("Error getting transactions for user", error.message);
-    res.status(500).json({ error: "Internal server error." });
+    res
+      .status(500)
+      .json({ ok: false, error: error.message || "Internal server error." });
   }
 };
 
@@ -37,10 +39,10 @@ const updateTransaction = async (req, res) => {
     // Execute query
     const response = await query(sqlQuery, values);
 
-    res.status(200).json({ data: response }); // Return updated user
+    res.status(200).json({ ok: true, data: response }); // Return updated user
   } catch (error) {
     console.error("Error adding transactions for user", error.message);
-    res.status(500).json({ error: "Internal server error." });
+    res.status(500).json({ ok: false, error: "Internal server error." });
   }
 };
 
@@ -49,28 +51,34 @@ const addNewTransaction = async (req, res, next) => {
   const {
     transaction_date,
     transaction_amount,
-    transaction_account,
+    transaction_to_account,
+    transaction_from_account,
     transaction_category,
     transaction_type,
+    transaction_description,
+    transaction_title,
   } = req.body;
 
   try {
     const cursor = await query(
-      "INSERT INTO transactions (transaction_date,transaction_amount,transaction_account, transaction_category, transaction_type,transaction_user_id) VALUES ($1, $2, $3,$4,$5,$6) RETURNING *",
+      "INSERT INTO transactions (transaction_date,transaction_amount,transaction_to_account, transaction_category, transaction_type,transaction_user_id,transaction_description,transaction_from_account,transaction_title) VALUES ($1, $2, $3,$4,$5,$6,$7,$8,$9) RETURNING *",
       [
         transaction_date,
         transaction_amount,
-        transaction_account,
+        transaction_to_account,
         transaction_category,
         transaction_type,
         req.user.user_id,
+        transaction_description,
+        transaction_from_account,
+        transaction_title,
       ]
     );
 
-    res.status(200).json({ data: cursor }); // Return updated user
+    res.status(200).json({ ok: true, data: cursor }); // Return updated user
   } catch (error) {
     console.error("Error adding transactions for user", error.message);
-    res.status(500).json({ error: "Internal server error." });
+    res.status(500).json({ ok: false, error: "Internal server error." });
   }
 };
 

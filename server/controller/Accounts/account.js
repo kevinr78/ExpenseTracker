@@ -5,17 +5,17 @@ const getAllAccounts = async (req, res, next) => {
   let cursor;
   try {
     cursor = await query(
-      "SELECT * FROM accounts WHERE account_user_id=$1 ORDER BY account_id",
+      "SELECT * FROM accounts WHERE account_user_id=$1 ORDER BY account_id LIMIT 5",
       [req.user.user_id]
     );
     if (cursor.length === 0) {
-      return res.status(404).json({ error: "No accounts found." });
+      return res.status(404).json({ ok: false, error: "No accounts found." });
     }
 
-    res.status(200).json({ data: cursor }); // Return updated user
+    res.status(200).json({ ok: true, data: cursor }); // Return updated user
   } catch (error) {
     console.error("Error getting accounts account:", error.message);
-    res.status(500).json({ error: "Internal server error." });
+    res.status(500).json({ ok: false, error: "Internal server error." });
   }
 };
 
@@ -32,8 +32,10 @@ const createNewAccount = async (req, res, next) => {
       "SELECT COUNT(*) AS num_of_accounts from accounts where account_user_id=$1 AND account_name=$2 AND account_type=$3",
       [req.user.user_id, account_name, account_type]
     );
-    if (cursor[0].num_of_accounts != 0) {
-      return res.status(400).json({ error: "Account already exists" });
+    if (cursor.length && cursor[0].num_of_accounts != 0) {
+      return res
+        .status(400)
+        .json({ ok: false, error: "Account already exists" });
     }
 
     cursor = await query(
@@ -47,10 +49,10 @@ const createNewAccount = async (req, res, next) => {
       ]
     );
 
-    res.status(200).json({ data: cursor }); // Return updated user
+    res.status(200).json({ ok: true, data: cursor }); // Return updated user
   } catch (error) {
     console.error("Error adding accounts:", error.message);
-    res.status(500).json({ error: "Internal server error." });
+    res.status(500).json({ ok: false, error: "Internal server error." });
   }
 };
 
@@ -63,7 +65,7 @@ const deleteAccount = async (req, res) => {
     ]);
 
     if (cursor.length === 0) {
-      return res.status(400).json({ error: "Account Not found." });
+      return res.status(400).json({ ok: false, error: "Account Not found." });
     }
 
     cursor = await query(
@@ -71,10 +73,10 @@ const deleteAccount = async (req, res) => {
       [account_id, req.user.user_id]
     );
 
-    res.status(200).json({ data: cursor }); // Return updated user
+    res.status(200).json({ ok: true, data: cursor }); // Return updated user
   } catch (error) {
     console.error("Error adding accounts:", error.message);
-    res.status(500).json({ error: "Internal server error." });
+    res.status(500).json({ ok: false, error: "Internal server error." });
   }
 };
 const updateAccount = async (req, res) => {
@@ -86,9 +88,10 @@ const updateAccount = async (req, res) => {
       !fieldsToBeUpdated ||
       Object.keys(fieldsToBeUpdated).length === 0
     ) {
-      return res
-        .status(400)
-        .json({ error: "User ID and at least one field are required." });
+      return res.status(400).json({
+        ok: false,
+        error: "User ID and at least one field are required.",
+      });
     }
 
     // Dynamically generate SET clause
@@ -110,13 +113,13 @@ const updateAccount = async (req, res) => {
     const response = await query(sqlQuery, values);
 
     if (response.length === 0) {
-      return res.status(404).json({ error: "User not found." });
+      return res.status(404).json({ ok: false, error: "User not found." });
     }
 
-    res.json(response[0]); // Return updated user
+    res.status(200).json({ ok: true, data: response[0] }); // Return updated user
   } catch (error) {
     console.error("Error updating account:", error.message);
-    res.status(500).json({ error: "Internal server error." });
+    res.status(500).json({ ok: false, error: "Internal server error." });
   }
 };
 
