@@ -1,41 +1,83 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Account, useAccountContext } from "../../../store/AccountContext";
 import { account_types } from "../../../utils/category";
 
 type NewAccount = {
-  URL: string;
-  payload: any;
-  method: "GET" | "POST";
+  data?: Account | null;
 };
 
-export default function NewAccount() {
-  const { addAccount } = useAccountContext();
-  const [formData, setFormData] = useState<Account>({
+export default function NewAccount({ data }: NewAccount) {
+  const { addAccount, updateAccount } = useAccountContext();
+  const defaultFormState: Account = {
     account_name: "",
-    account_status: false,
+    account_status: "false",
     account_type: "",
     account_starting_balance: 0,
-  });
+    account_user_id: 1,
+  };
+  const [formData, setFormData] = useState<Account>(defaultFormState);
+  const [updatedFields, setUpdatedFields] = useState<Partial<Account>>({});
 
+  // Handle input changes
   // Handle input changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Track only modified fields for updates
+    if (data) {
+      setUpdatedFields((prev) => ({
+        ...prev,
+        ...(data[name as keyof Account] !== value ? { [name]: value } : {}),
+      }));
+    }
   };
+
+  // Effect to populate form when editing
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        ...defaultFormState, // Ensure no missing fields
+        ...data, // Override only existing fields
+      });
+      setUpdatedFields({}); // Reset modified fields when switching transactions
+    } else {
+      setFormData(defaultFormState);
+
+      setUpdatedFields({});
+    }
+  }, [data]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Prevent page reload
 
-    const payload = {
-      account_name: formData.account_name,
-      account_status: formData.account_status,
-      account_type: formData.account_type,
-      account_starting_balance: formData.account_starting_balance,
-      user_id: 1,
-    };
-    addAccount(payload);
+    if (data) {
+      // Editing mode: Send only modified fields
+      if (Object.keys(updatedFields).length === 0) {
+        console.log("No changes detected!");
+        return; // Prevent unnecessary API call
+      }
+      if (data.account_id) {
+        await updateAccount(data.account_id, updatedFields);
+      }
+    } else {
+      // Adding a new transaction: Send full form data
+
+      addAccount(formData);
+    }
+
+    // Reset form after submission
+    setFormData(defaultFormState);
+
+    setUpdatedFields({});
   };
+
   return (
     <form action="" id="new-account-form" onSubmit={handleSubmit}>
       <fieldset className="fieldset  bg-base-200 border border-base-300 p-4 rounded-box">
@@ -57,6 +99,7 @@ export default function NewAccount() {
           className="select w-full"
           onChange={handleChange}
           name="account_type"
+          value={formData.account_type}
         >
           <option disabled={true}>Pick Account Type</option>
           {account_types.map((acc, idx) => (
@@ -72,22 +115,23 @@ export default function NewAccount() {
           onChange={handleChange}
           name="account_starting_balance"
           placeholder="Starting Balance"
+          value={formData.account_starting_balance}
         />
 
         <label className="fieldset-label">Status</label>
         <select
-          defaultValue="Status"
           className="select w-full"
           onChange={handleChange}
           name="account_status"
+          value={formData.account_status as string}
         >
           <option disabled={true}>Status</option>
-          <option value={"1"}>Active</option>
-          <option value={"0"}>Disabled</option>
+          <option value={"true"}>Active</option>
+          <option value={"false"}>Disabled</option>
         </select>
 
         <button className="btn btn-success mt-4" type="submit">
-          Add Account
+          {data ? "Update Account" : "Add Account"}
         </button>
       </fieldset>
     </form>

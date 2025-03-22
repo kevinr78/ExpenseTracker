@@ -4,18 +4,51 @@ import { useTransactionContext } from "../../../store/TransactionContext";
 import TransactionRow from "./TransactionRow";
 import { useEffect } from "react";
 
-export default function Transaction({ modalAction }: ModalProps) {
-  const { transactions, fetchTransactions, addTransaction } =
+type TransactionProps = {
+  modalAction: React.Dispatch<React.SetStateAction<ModalProps>>;
+};
+
+export default function Transaction({ modalAction }: TransactionProps) {
+  const { transactions, fetchTransactions, addTransaction, deleteTransaction } =
     useTransactionContext();
   useEffect(() => {
     fetchTransactions();
   }, [addTransaction]);
+
+  const handleTransactionAction = async (e: React.MouseEvent) => {
+    const target = e.target as HTMLButtonElement;
+    const rowId = target.closest("tr")?.dataset.id;
+    switch (target.name) {
+      case "delete":
+        if (!confirm("Are you sure you want to delete this transaction")) {
+          return;
+        }
+        if (rowId) deleteTransaction(rowId);
+
+        return;
+      case "edit":
+        const transaction = transactions.find(
+          (trn) => trn.transaction_id == rowId
+        );
+        if (transaction) {
+          modalAction({ type: "Transactions", item: transaction });
+          const modal = document.getElementById(
+            "modal"
+          ) as HTMLDialogElement | null;
+          if (modal) modal.showModal();
+        }
+        return;
+      default:
+        return;
+    }
+  };
+
   return (
     <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
       <div className="p-4 pb-2 text-xs  tracking-wide sticky top-0 z-10 bg-base-100">
         <ItemNavbar type="Transactions" action={modalAction} />
       </div>
-      <table className="table ">
+      <table className="table" onClick={handleTransactionAction}>
         {/* head */}
         <thead className="bg-base-300">
           <tr>

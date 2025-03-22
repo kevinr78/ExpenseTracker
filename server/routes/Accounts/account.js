@@ -8,9 +8,9 @@ import {
 } from "../../controller/Accounts/account.js";
 import { checkForUser } from "../../middleware/checkIfUserExist.js";
 
-accRouter.post("/allAccounts", checkForUser, getAllAccounts);
-accRouter.post("/addAccount", checkForUser, createNewAccount);
-accRouter.delete("/removeAccount", checkForUser, deleteAccount);
-accRouter.patch("/updateAccount", checkForUser, updateAccount);
+accRouter.get("/account", checkForUser, getAllAccounts);
+accRouter.post("/account", checkForUser, createNewAccount);
+accRouter.delete("/account", checkForUser, deleteAccount);
+accRouter.patch("/account", checkForUser, updateAccount);
 
 export default accRouter;

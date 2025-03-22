@@ -10,7 +10,7 @@ export default function TransactionRow({
   transaction_title,
 }: Transaction) {
   return (
-    <tr data-id={transaction_id}>
+    <tr data-id={transaction_id} className="hover:bg-base-200">
       <th></th>
       <td>
         <div className="flex items-center gap-3">
@@ -41,10 +41,16 @@ export default function TransactionRow({
         }).format(Number(transaction_amount))}
       </td>
       <td className="flex gap-2">
-        <button className="btn btn-sm btn-circle btn-outline btn-error">
+        <button
+          className="btn btn-sm btn-circle btn-outline btn-error"
+          name="delete"
+        >
           X
         </button>
-        <button className="btn btn-sm btn-circle btn-outline btn-info">
+        <button
+          className="btn btn-sm btn-circle btn-outline btn-info"
+          name="edit"
+        >
           E
         </button>
       </td>

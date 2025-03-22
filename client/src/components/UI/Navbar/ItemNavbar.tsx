@@ -13,7 +13,7 @@ export default function ItemNavbar({ type, action }: NavBarProps) {
               const modal = document.getElementById(
                 "modal"
               ) as HTMLDialogElement | null;
-              action(type);
+              action({ type, item: null });
               if (modal) modal.showModal();
             }}
           >

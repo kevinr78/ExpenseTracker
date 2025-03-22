@@ -18,7 +18,7 @@ export default function Stats() {
     });
 
     const response = await request.json();
-    console.log(response);
+
     if (!response.ok) {
       toast(response.error);
       return;

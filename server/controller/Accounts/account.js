@@ -1,7 +1,6 @@
 import { query } from "../../utils/db.js";
 
 const getAllAccounts = async (req, res, next) => {
-  const { user_id } = req.body;
   let cursor;
   try {
     cursor = await query(
@@ -9,7 +8,9 @@ const getAllAccounts = async (req, res, next) => {
       [req.user.user_id]
     );
     if (cursor.length === 0) {
-      return res.status(404).json({ ok: false, error: "No accounts found." });
+      return res
+        .status(200)
+        .json({ ok: true, data: cursor, error: "No accounts found." });
     }
 
     res.status(200).json({ ok: true, data: cursor }); // Return updated user

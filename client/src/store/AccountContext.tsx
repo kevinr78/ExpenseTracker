@@ -13,7 +13,7 @@ export type Account = {
   account_name: string;
   account_type: string;
   account_starting_balance?: number;
-  account_status: boolean;
+  account_status: boolean | string;
   account_user_id?: number;
 };
 
@@ -21,6 +21,8 @@ interface AccountContextProps {
   accounts: Account[];
   addAccount: (newAccount: Account) => void;
   fetchAccounts: () => Promise<void>;
+  deleteAccount: (account_id: string) => Promise<void>;
+  updateAccount: (account_id: number, updatedFields: {}) => Promise<void>;
 }
 
 // Create Context
@@ -35,11 +37,10 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
   const fetchAccounts = useCallback(async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/accounts/allAccounts",
+        "http://localhost:3000/accounts/account?user_id=1",
         {
-          method: "POST",
+          method: "GET",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: 1 }),
         }
       );
       const data = await response.json();
@@ -47,7 +48,52 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
         toast(data.error);
         return;
       }
+      if (data.data.length === 0) {
+        setAccounts([]);
+        return;
+      }
+
       setAccounts(data.data);
+    } catch (error: any) {
+      console.error("Error fetching accounts:", error);
+      toast(error.message);
+    }
+  }, []);
+  // Fetch accounts
+  const updateAccount = useCallback(
+    async (account_id: number, fieldsToBeUpdated: {}) => {
+      try {
+        const response = await fetch("http://localhost:3000/accounts/account", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: 1, account_id, fieldsToBeUpdated }),
+        });
+        const data = await response.json();
+        if (!data.ok) {
+          toast(data.error);
+          return;
+        }
+        fetchAccounts();
+      } catch (error: any) {
+        console.error("Error fetching accounts:", error);
+        toast(error.message);
+      }
+    },
+    []
+  );
+  const deleteAccount = useCallback(async (account_id: string) => {
+    try {
+      const response = await fetch("http://localhost:3000/accounts/account", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: 1, account_id }),
+      });
+      const data = await response.json();
+      if (!data.ok) {
+        toast(data.error);
+        return;
+      }
+      fetchAccounts();
     } catch (error: any) {
       console.error("Error fetching accounts:", error);
       toast(error.message);
@@ -58,14 +104,11 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
   const addAccount = useCallback(
     async (newAccount: Account) => {
       try {
-        const request = await fetch(
-          "http://localhost:3000/accounts/addAccount",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newAccount),
-          }
-        );
+        const request = await fetch("http://localhost:3000/accounts/account", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newAccount),
+        });
         const response = await request.json();
 
         if (!response.ok) {
@@ -93,7 +136,15 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
   );
 
   return (
-    <AccountContext.Provider value={{ accounts, addAccount, fetchAccounts }}>
+    <AccountContext.Provider
+      value={{
+        accounts,
+        addAccount,
+        fetchAccounts,
+        deleteAccount,
+        updateAccount,
+      }}
+    >
       {children}
     </AccountContext.Provider>
   );

@@ -1,10 +1,14 @@
 import { SetStateAction } from "react";
+import { Account } from "../store/AccountContext";
+import { Transaction } from "../store/TransactionContext";
 
-export type ModalProps = {
-  modalAction: React.Dispatch<SetStateAction<string>>;
-};
+export interface ModalProps {
+  onClose?: () => void;
+  type: "Accounts" | "Transactions";
+  item: Account | Transaction | null;
+}
 
 export type NavBarProps = {
-  type: string;
-  action: React.Dispatch<SetStateAction<string>>;
+  type: "Accounts" | "Transactions";
+  action: React.Dispatch<SetStateAction<ModalProps>>;
 };

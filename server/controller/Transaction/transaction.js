@@ -83,10 +83,22 @@ const addNewTransaction = async (req, res, next) => {
 };
 
 // Function to get a user by ID
-const deleteTransaction = async (transaction_id) => {
-  return await query("DELETE  FROM transactions WHERE transaction_id = $1", [
-    transaction_id,
-  ]);
+const deleteTransaction = async (req, res) => {
+  let cursor;
+  const { transaction_id } = req.body;
+  try {
+    cursor = await query(
+      "DELETE  FROM transactions WHERE transaction_id = $1 and transaction_user_id=$2",
+      [transaction_id, req.user.user_id]
+    );
+
+    res.status(200).json({ ok: true, data: cursor }); // Return updated user
+  } catch (error) {
+    console.error("Error deleting transaction", error.message);
+    res
+      .status(500)
+      .json({ ok: false, error: error.message || "Internal server error." });
+  }
 };
 
 export {
