@@ -7,13 +7,13 @@ const getStats = async (req, res, next) => {
     select 'Credit' as expense_type, coalesce(sum(transaction_amount),0) as amount
     from transactions t
     where transaction_type='Credit'
-    and transaction_user_id=$1
+    and user_id=$1
     and date_trunc('month', transaction_date) = date_trunc('month' , current_timestamp)
     UNION
     select 'Debit' as expense_type, coalesce(sum(transaction_amount),0) as amount
     from transactions t
     where transaction_type='Debit'
-    and transaction_user_id=$1
+    and user_id=$1
     and date_trunc('month', transaction_date) = date_trunc('month' , current_timestamp)`;
     cursor = await query(sqlquery, [req.user.user_id]);
 

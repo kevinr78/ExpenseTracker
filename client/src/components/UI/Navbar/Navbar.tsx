@@ -1,6 +1,29 @@
-import React from "react";
+import { useNavigate } from "react-router";
+import { nav_links } from "../../../utils/category";
+import { Link } from "react-router";
 
 export default function Navbar() {
+  const renderList = nav_links.map((link) =>
+    link.children ? (
+      <li key={link.id}>
+        <details>
+          <summary>{link.name}</summary>
+          <ul className="p-2">
+            {link.children.map((child) => (
+              <li key={child.id}>
+                <Link to={child.to}>{child.name}</Link>
+              </li>
+            ))}
+          </ul>
+        </details>
+      </li>
+    ) : (
+      <li key={link.id}>
+        <Link to={link.to}>{link.name}</Link>
+      </li>
+    )
+  );
+
   return (
     <div className="navbar bg-base-100 shadow-sm  top-0 z-10">
       <div className="navbar-start">
@@ -26,55 +49,13 @@ export default function Navbar() {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
-            <li>
-              <a>Home</a>
-            </li>
-            <li>
-              <a>Transaction</a>
-            </li>
-            <li>
-              <a>Accounts</a>
-            </li>
-            <li>
-              <a>Reports</a>
-              <ul className="p-2">
-                <li>
-                  <a>Analytics</a>
-                </li>
-                <li>
-                  <a>Report</a>
-                </li>
-              </ul>
-            </li>
+            {renderList}
           </ul>
         </div>
         <a className="btn btn-ghost text-xl">ExpTrack</a>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          <li>
-            <a> Home</a>
-          </li>
-          <li>
-            <a>Transaction</a>
-          </li>
-          <li>
-            <a>Accounts</a>
-          </li>
-          <li>
-            <details>
-              <summary>Reports</summary>
-              <ul className="p-2">
-                <li>
-                  <a>Analytics</a>
-                </li>
-                <li>
-                  <a>Reports</a>
-                </li>
-              </ul>
-            </details>
-          </li>
-        </ul>
+        <ul className="menu menu-horizontal px-1">{renderList}</ul>
       </div>
       <div className="navbar-end">
         <div

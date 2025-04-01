@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import AccountList from "../UI/Account/AccountList";
-import { Account } from "../../store/AccountContext";
-import { Transaction as TP } from "../../store/TransactionContext";
-import Modal from "../UI/Modal";
+
 import Transaction from "../UI/Transaction/Transaction";
 import Stats from "../UI/Stats/Stats";
 import { ModalProps } from "../../types/types";
+import { useOutletContext } from "react-router";
 
+export type OutletContextProps = {
+  modalContent: ModalProps;
+  setModalContent: React.Dispatch<React.SetStateAction<ModalProps>>;
+};
 export default function DashBoard() {
-  const [modalContent, setModalContent] = useState<ModalProps>({
-    type: "Accounts",
-    item: null,
-  });
+  const { setModalContent } = useOutletContext<OutletContextProps>();
   return (
     <main className="p-4 w-full flex flex-col gap-2 h-screen">
-      <Modal content={modalContent.type} data={modalContent.item} />
       <section id="cta-tab" className="flex justify-around gap-x-2 h-1/2">
         <div
           id="accounts"

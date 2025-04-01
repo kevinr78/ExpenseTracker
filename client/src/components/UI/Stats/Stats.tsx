@@ -23,6 +23,7 @@ export default function Stats() {
       toast(response.error);
       return;
     }
+    console.log(response.data);
     setStats(response.data);
   };
 

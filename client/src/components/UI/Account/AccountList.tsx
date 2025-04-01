@@ -27,9 +27,10 @@ export default function AccountList({ modalAction }: AccountProps) {
 
         return;
       case "edit":
+      case "add_balance":
         const account = accounts.find((acc) => acc.account_id == rowId);
         if (account) {
-          modalAction({ type: "Accounts", item: account });
+          modalAction({ type: "Accounts", item: account, action: target.name });
           const modal = document.getElementById(
             "modal"
           ) as HTMLDialogElement | null;
@@ -55,6 +56,7 @@ export default function AccountList({ modalAction }: AccountProps) {
               account_name={account.account_name}
               account_status={account.account_status}
               account_type={account.account_type}
+              account_balance={account.account_balance}
             />
           );
         })

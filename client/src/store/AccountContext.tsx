@@ -4,6 +4,7 @@ import {
   useContext,
   useState,
   ReactNode,
+  useEffect,
 } from "react";
 import { toast } from "react-toastify";
 // Define types
@@ -12,13 +13,20 @@ export type Account = {
   account_id?: number;
   account_name: string;
   account_type: string;
-  account_starting_balance?: number;
+  account_balance?: number;
   account_status: boolean | string;
   account_user_id?: number;
 };
 
+interface AccountType {
+  acc_type_id: number;
+  acc_type_name: string;
+}
+
 interface AccountContextProps {
   accounts: Account[];
+  account_type: AccountType[];
+  setAccounts: React.Dispatch<React.SetStateAction<Account[]>>;
   addAccount: (newAccount: Account) => void;
   fetchAccounts: () => Promise<void>;
   deleteAccount: (account_id: string) => Promise<void>;
@@ -32,17 +40,41 @@ const AccountContext = createContext<AccountContextProps | undefined>(
 
 export const AccountProvider = ({ children }: { children: ReactNode }) => {
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [account_type, setAccountType] = useState([]);
 
-  // Fetch accounts
-  const fetchAccounts = useCallback(async () => {
+  const fetchAccountType = useCallback(async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/accounts/account?user_id=1",
+        "http://localhost:3000/accounts/account_type",
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         }
       );
+      const data = await response.json();
+      if (!data.ok) {
+        toast(data.error);
+        return;
+      }
+      if (data.data.length === 0) {
+        setAccountType([]);
+        return;
+      }
+      console.log(data.data);
+      setAccountType(data.data);
+    } catch (error: any) {
+      console.error("Error fetching accounts:", error);
+      toast(error.message);
+    }
+  }, []);
+
+  // Fetch accounts
+  const fetchAccounts = useCallback(async () => {
+    try {
+      const response = await fetch("http://localhost:3000/accounts/account/1", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
       const data = await response.json();
       if (!data.ok) {
         toast(data.error);
@@ -134,11 +166,16 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
     },
     [fetchAccounts]
   );
-
+  useEffect(() => {
+    /*  fetchAccounts(); */
+    fetchAccountType();
+  }, [fetchAccountType]);
   return (
     <AccountContext.Provider
       value={{
         accounts,
+        account_type,
+        setAccounts,
         addAccount,
         fetchAccounts,
         deleteAccount,

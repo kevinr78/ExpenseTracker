@@ -1,36 +1,35 @@
 import "./App.css";
-import { AccountProvider } from "./store/AccountContext";
-import { TransactionProvider } from "./store/TransactionContext";
-import { ToastContainer, Slide } from "react-toastify";
-import Navbar from "./components/UI/Navbar/Navbar";
+import { createBrowserRouter } from "react-router";
+import Transactions from "./components/pages/Transactions";
 
+import Accounts from "./components/pages/Accounts";
+import { RouterProvider } from "react-router/dom";
+import Layout from "./components/Layout";
 import DashBoard from "./components/pages/DashBoard";
+
+const BrowserRouter = createBrowserRouter([
+  {
+    path: "/",
+    Component: Layout,
+    children: [
+      {
+        index: true,
+        path: "/",
+        Component: DashBoard,
+      },
+      {
+        path: "/transactions",
+        Component: Transactions,
+      },
+      {
+        path: "/accounts",
+        Component: Accounts,
+      },
+    ],
+  },
+]);
 function App() {
-  return (
-    <>
-      <div className="sticky top-0 z-10">
-        <Navbar />
-      </div>
-      <AccountProvider>
-        <TransactionProvider>
-          <DashBoard />
-        </TransactionProvider>
-      </AccountProvider>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover={false}
-        theme="dark"
-        transition={Slide}
-      />
-    </>
-  );
+  return <RouterProvider router={BrowserRouter} />;
 }
 
 export default App;

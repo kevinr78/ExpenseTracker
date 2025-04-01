@@ -6,6 +6,7 @@ export interface ModalProps {
   onClose?: () => void;
   type: "Accounts" | "Transactions";
   item: Account | Transaction | null;
+  action: "edit" | "delete" | "new" | "add_balance" | "";
 }
 
 export type NavBarProps = {

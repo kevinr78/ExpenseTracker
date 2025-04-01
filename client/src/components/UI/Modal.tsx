@@ -3,21 +3,17 @@ import NewTransaction from "./Transaction/NewTransaction";
 
 import { Account } from "../../store/AccountContext";
 import { Transaction } from "../../store/TransactionContext";
-interface ModalProps {
-  onClose?: () => void;
-  content: string;
-  data: Account | Transaction | null;
-}
+import { ModalProps } from "../../types/types";
 
-export default function Modal({ content, data }: ModalProps) {
+export default function Modal({ type, item, action }: ModalProps) {
   return (
     <>
       <dialog id="modal" className="modal">
         <div className="modal-box">
-          {content === "Accounts" ? (
-            <NewAccount data={data as Account} />
+          {type === "Accounts" ? (
+            <NewAccount data={item as Account} action={action} />
           ) : (
-            <NewTransaction data={data as Transaction} />
+            <NewTransaction data={item as Transaction} />
           )}
           <div className="modal-action">
             <form method="dialog">
