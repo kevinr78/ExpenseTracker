@@ -4,10 +4,46 @@ import { query } from "../../utils/db.js";
 const getAllTransactions = async (req, res, next) => {
   let cursor;
   try {
-    cursor = await query(
-      "SELECT * FROM transactions where user_id=$1 ORDER BY transaction_date LIMIT 5 ",
-      [req.user.user_id]
-    );
+    if (req.query.mode === "filter") {
+      let baseQuery = "SELECT * FROM transactions WHERE user_id=$1 AND ";
+      const whereConditions = [];
+      const entries = Object.entries(req.query);
+      const values = [req.user.user_id];
+
+      entries.forEach(([key, value], index) => {
+        if (key === "mode") return;
+        if (key === "transaction_title") {
+          whereConditions.push(`${key} LIKE $${values.length + 1}`);
+          values.push(`%${value}%`);
+        } else if (key === "min_amount") {
+          whereConditions.push(`transaction_amount >= $${values.length + 1}`);
+          values.push(value);
+        } else if (key === "max_amount") {
+          whereConditions.push(`transaction_amount <= $${values.length + 1}`);
+          values.push(value);
+        } else if (key === "start_date") {
+          whereConditions.push(`transaction_date >= $${values.length + 1}`);
+          values.push(value);
+        } else if (key === "end_date") {
+          whereConditions.push(`transaction_date <= $${values.length + 1}`);
+          values.push(value);
+        } else {
+          whereConditions.push(`${key} = $${values.length + 1}`);
+          values.push(value);
+        }
+      });
+
+      if (whereConditions.length > 0) {
+        baseQuery += whereConditions.join(" AND ");
+        baseQuery += " ORDER BY transaction_date ";
+        cursor = await query(baseQuery, values);
+      }
+    } else {
+      cursor = await query(
+        "SELECT * FROM transactions where user_id=$1 ORDER BY transaction_date LIMIT 5 ",
+        [req.user.user_id]
+      );
+    }
 
     res.status(200).json({ ok: true, data: cursor }); // Return updated user
   } catch (error) {

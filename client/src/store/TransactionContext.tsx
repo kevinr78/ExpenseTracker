@@ -30,6 +30,7 @@ interface TransactionContextProps {
     transaction_id: number,
     updatedFields: Partial<Transaction>
   ) => Promise<void>;
+  setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
 }
 
 // Create Context
@@ -160,6 +161,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         fetchTransactions,
         deleteTransaction,
         updateTransaction,
+        setTransactions,
       }}
     >
       {children}

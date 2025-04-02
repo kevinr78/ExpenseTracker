@@ -25,8 +25,6 @@ export default function NewTransaction({ data }: NewTransactionProps) {
     transaction_description: "",
   };
 
-  console.log(accounts);
-
   // State for form data
   const [formData, setFormData] = useState<Transaction>(defaultFormState);
   const [updatedFields, setUpdatedFields] = useState<Partial<Transaction>>({});
