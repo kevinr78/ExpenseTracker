@@ -2,6 +2,7 @@
 Application to manage and track expenses. Users can add, modify, delete and update and delete expenses
 Developed as personal projects to help me track expenses. Can export accounts and transactions to PDF reports
 
+Will be adding more features like analytics and visualization for data
 
 # HomePage
 ![Homepage of expense tracker](https://github.com/user-attachments/assets/cc8ed9eb-081a-41cf-9ab6-ef83ea4f1a7c)
