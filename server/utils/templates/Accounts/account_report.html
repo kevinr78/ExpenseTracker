@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Account Report</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background-color: #f9f9f9;
+        color: #333;
+      }
+
+      h1 {
+        text-align: center;
+        color: #444;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+        background-color: #fff;
+      }
+
+      th,
+      td {
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+
+      th {
+        background-color: #007bff;
+        color: white;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .status-active {
+        color: green;
+        font-weight: bold;
+      }
+
+      .status-disabled {
+        color: red;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Account Report</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Account ID</th>
+          <th>Account Name</th>
+          <th>Account Type</th>
+          <th>Active</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each users}}
+        <tr>
+          <td>{{this.account_id}}</td>
+          <td>{{this.account_name}}</td>
+          <td>{{this.account_type}}</td>
+          <td>
+            {{#if this.account_status}}
+            <span class="status-active">Active</span>
+            {{else}}
+            <span class="status-disabled">Disabled</span>
+            {{/if}}
+          </td>
+          <td>${{this.account_balance}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </body>
+</html>

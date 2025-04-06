@@ -8,7 +8,7 @@ type NewAccount = {
 
 export default function NewAccount({ data, action }: NewAccount) {
   const { addAccount, updateAccount, account_type } = useAccountContext();
-  console.log(action);
+
   const defaultFormState: Account = {
     account_name: "",
     account_status: "false",

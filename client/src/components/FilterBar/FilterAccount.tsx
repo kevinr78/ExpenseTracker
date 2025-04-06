@@ -19,7 +19,7 @@ export default function AccountFilter(/* { onFilterChange }: AccountFilterProps 
   };
 
   const handleApplyFilters = async () => {
-    let base_url = new URL("http://localhost:3000/accounts/account");
+    let base_url = new URL("http://localhost:3000/accounts/account/1");
     const baseFilter = [];
     for (const [key, value] of Object.entries(filters)) {
       if (value !== "" && value !== undefined) {
@@ -27,8 +27,7 @@ export default function AccountFilter(/* { onFilterChange }: AccountFilterProps 
       }
     }
     const params = new URLSearchParams(baseFilter);
-    params.append("user_id", "1");
-    console.log(`${base_url.toString()}?${params.toString()}`);
+    params.append("mode", "filter");
     const request = await fetch(`${base_url.toString()}?${params.toString()}`, {
       method: "GET",
       headers: {
@@ -55,7 +54,7 @@ export default function AccountFilter(/* { onFilterChange }: AccountFilterProps 
     fetchAccounts();
   };
   return (
-    <div className="collapse collapse-arrow bg-base-300 mb-4">
+    <div className="collapse collapse-arrow bg-base-300 mb-4 sticky">
       <input type="checkbox" />
       <h2 className="text-lg font-bold  collapse-title">Filter Accounts</h2>
       <div className="card bg-base-300 shadow-lg  collapse-content">

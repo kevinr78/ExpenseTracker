@@ -5,7 +5,10 @@ import {
   useState,
   ReactNode,
   useEffect,
+  useRef,
+  use,
 } from "react";
+import { useLocation } from "react-router";
 import { toast } from "react-toastify";
 // Define types
 
@@ -23,12 +26,17 @@ interface AccountType {
   acc_type_name: string;
 }
 
+interface AccountRef {
+  accountCount: number;
+  limit: number;
+}
+
 interface AccountContextProps {
   accounts: Account[];
   account_type: AccountType[];
   setAccounts: React.Dispatch<React.SetStateAction<Account[]>>;
   addAccount: (newAccount: Account) => void;
-  fetchAccounts: () => Promise<void>;
+  fetchAccounts: (page?: number, limit?: number) => Promise<void>;
   deleteAccount: (account_id: string) => Promise<void>;
   updateAccount: (account_id: number, updatedFields: {}) => Promise<void>;
 }
@@ -41,16 +49,15 @@ const AccountContext = createContext<AccountContextProps | undefined>(
 export const AccountProvider = ({ children }: { children: ReactNode }) => {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [account_type, setAccountType] = useState([]);
-
+  const locate = useLocation();
   const fetchAccountType = useCallback(async () => {
     try {
-      const response = await fetch(
-        "http://localhost:3000/accounts/account_type",
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const base = new URL("http://localhost:3000/accounts/account_type");
+
+      const response = await fetch(base, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
       const data = await response.json();
       if (!data.ok) {
         toast(data.error);
@@ -60,7 +67,7 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
         setAccountType([]);
         return;
       }
-      console.log(data.data);
+
       setAccountType(data.data);
     } catch (error: any) {
       console.error("Error fetching accounts:", error);
@@ -71,10 +78,16 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
   // Fetch accounts
   const fetchAccounts = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:3000/accounts/account/1", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const base_URL = new URL("http://localhost:3000/accounts/account/1");
+
+      const response = await fetch(
+        `${base_URL}?path=${locate.pathname.slice(1)}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
       const data = await response.json();
       if (!data.ok) {
         toast(data.error);

@@ -2,13 +2,21 @@ import { query } from "../../utils/db.js";
 
 const getAllAccounts = async (req, res, next) => {
   let cursor;
-  try {
-    cursor = await query(
-      "SELECT a.account_id,a.account_name,a.account_status,atm.acc_type_name as account_type, a.account_balance\
+  const { mode, path } = req.query;
+
+  if (mode === "filter") {
+    return getFilteredAccounts(req, res, next);
+  }
+
+  let sqlQuery = `SELECT a.account_id,a.account_name,a.account_status,atm.acc_type_name as account_type, a.account_balance\
       FROM accounts a, account_type_master atm \
-      WHERE a.user_id=$1 and a.account_type = atm.acc_type_id ORDER BY account_id LIMIT 5",
-      [req.user.user_id]
-    );
+      WHERE a.user_id=$1 and a.account_type = atm.acc_type_id ORDER BY account_id`;
+
+  if (path === "") {
+    sqlQuery += " LIMIT 5";
+  }
+  try {
+    cursor = await query(sqlQuery, [req.user.user_id]);
     if (cursor.length === 0) {
       return res
         .status(200)
@@ -58,6 +66,9 @@ const getFilteredAccounts = async (req, res, next) => {
 
   // Handle normal filters
   entries.forEach(([key, value], index) => {
+    if (key === "mode") {
+      return; // Skip the mode filter
+    }
     if (key === "minBalance") {
       whereConditions.push(`a.account_balance >= $${values.length + 1}`);
       values.push(value);

@@ -3,12 +3,15 @@ import { ModalProps } from "../../../types/types";
 import { useTransactionContext } from "../../../store/TransactionContext";
 import TransactionRow from "./TransactionRow";
 import { useEffect } from "react";
+import { useLocation } from "react-router";
 
 type TransactionProps = {
   modalAction: React.Dispatch<React.SetStateAction<ModalProps>>;
 };
 
 export default function Transaction({ modalAction }: TransactionProps) {
+  const locate = useLocation();
+
   const { transactions, fetchTransactions, addTransaction, deleteTransaction } =
     useTransactionContext();
   useEffect(() => {
@@ -31,7 +34,11 @@ export default function Transaction({ modalAction }: TransactionProps) {
           (trn) => trn.transaction_id == rowId
         );
         if (transaction) {
-          modalAction({ type: "Transactions", item: transaction });
+          modalAction({
+            type: "Transactions",
+            item: transaction,
+            action: "edit",
+          });
           const modal = document.getElementById(
             "modal"
           ) as HTMLDialogElement | null;
@@ -84,6 +91,18 @@ export default function Transaction({ modalAction }: TransactionProps) {
             </tr>
           )}
         </tbody>
+        {locate.pathname === "/transactions" && (
+          <tfoot className="hover:bg-primary group">
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Show More</th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tfoot>
+        )}
         {/* foot */}
       </table>
     </div>

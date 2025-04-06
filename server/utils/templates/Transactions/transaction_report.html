@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Transaction Report</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background-color: #f9f9f9;
+        color: #333;
+      }
+
+      h1 {
+        text-align: center;
+        color: #444;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+        background-color: #fff;
+      }
+
+      th,
+      td {
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+
+      th {
+        background-color: #28a745;
+        color: white;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .credit {
+        color: green;
+        font-weight: bold;
+      }
+
+      .debit {
+        color: red;
+        font-weight: bold;
+      }
+
+      .amount {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Transaction Report</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Account</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each users}}
+        <tr>
+          <td>{{this.transaction_id}}</td>
+          <td>{{this.transaction_date}}</td>
+          <td>{{this.transaction_title}}</td>
+          <td>{{this.transaction_category}}</td>
+          <td>{{this.transaction_type}}</td>
+          <td>{{this.transaction_amount}}</td>
+          <td>${{this.account_name}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </body>
+</html>

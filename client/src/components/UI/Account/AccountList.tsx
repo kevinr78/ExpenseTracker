@@ -3,11 +3,13 @@ import { useAccountContext } from "../../../store/AccountContext";
 import AccountItem from "./AccountItem";
 import { useEffect } from "react";
 import ItemNavbar from "../Navbar/ItemNavbar";
+import { useLocation } from "react-router";
 
 type AccountProps = {
   modalAction: React.Dispatch<React.SetStateAction<ModalProps>>;
 };
 export default function AccountList({ modalAction }: AccountProps) {
+  const locate = useLocation();
   const { accounts, addAccount, fetchAccounts, deleteAccount } =
     useAccountContext();
   useEffect(() => {

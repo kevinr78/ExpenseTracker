@@ -35,12 +35,12 @@ const getAllTransactions = async (req, res, next) => {
 
       if (whereConditions.length > 0) {
         baseQuery += whereConditions.join(" AND ");
-        baseQuery += " ORDER BY transaction_date ";
+        baseQuery += " ORDER BY transaction_date desc ";
         cursor = await query(baseQuery, values);
       }
     } else {
       cursor = await query(
-        "SELECT * FROM transactions where user_id=$1 ORDER BY transaction_date LIMIT 5 ",
+        "SELECT * FROM transactions where user_id=$1 ORDER BY transaction_date desc LIMIT 5 ",
         [req.user.user_id]
       );
     }
